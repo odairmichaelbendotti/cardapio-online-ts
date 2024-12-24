@@ -21,16 +21,16 @@
             <div class="flex flex-col justify-center w-full md:w-1/2 px-14 md:px-0"> 
                 <div class="w-full relative">
                     <i class="fa-regular fa-user absolute left-1 md:bottom-[9px] bottom-[10px] text-gray-300 md:text-xs text-md"></i>
-                    <input type="text" placeholder="E-mail" class="py-[3px] pl-8 md:pl-6 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400">
+                    <input type="text" placeholder="E-mail" class="py-[3px] pl-8 md:pl-6 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-login-email">
                 </div>
 
                 <div class="w-full relative mt-9">
                     <i class="fa-solid fa-lock absolute left-1 md:bottom-[9px] bottom-[10px] text-gray-300 md:text-xs text-md cursor-pointer show-password"></i>
-                    <input type="password" placeholder="Senha" class="py-[3px] pl-8 md:pl-6 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400 password-input">
+                    <input type="password" placeholder="Senha" class="py-[3px] pl-8 md:pl-6 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400 password-input" id="user-login-password">
                 </div>
                 <p class="hidden text-xs mt-3 text-red-500 user-login-error">Usuário não encontrado.</p>
                 <a href="/pages/cadastro.html"><p class="text-sm mt-3 text-right font-bold user-login-error">Não possui cadastro?</p></a>
-                <div class="mt-9 w-full bg-[#F3DFA0] text-[#20170E] text-center py-2 rounded-md cursor-pointer login-button">Fazer login</div>
+                <div class="mt-9 w-full bg-[#F3DFA0] text-[#20170E] text-center py-2 rounded-md cursor-pointer login-button" id="login-user-button">Fazer login</div>
             </div>
         </form>
     </main>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,55 @@
     <link rel="stylesheet" href="../src/styles/style.css">
     <link rel="stylesheet" href="../src/styles/input.css">
     <link rel="stylesheet" href="../src/styles/output.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
     <header class="md:max-w-6xl md:mx-auto md:w-full"></header>
+    <form class="w-full md:h-[calc(100vh-74px)] md:max-w-5xl md:flex md:justify-center md:items-center mt-6 md:mx-auto">
+        <div class="flex flex-col gap-8 md:w-full h-full md:h-96 p-6">
+
+            <input type="text" placeholder="Nome completo" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-nome" value="Luan Carlos Bendotti">
+
+            <input type="email" placeholder="E-mail" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-email" value="lbendotti@gmail.com">
+
+            <div class="w-full relative">
+                <i class="fa-solid fa-lock absolute left-1 md:bottom-[9px] bottom-[10px] text-gray-300 md:text-xs text-md cursor-pointer show-password"></i>
+                <input type="password" placeholder="Senha" class="py-[3px] pl-8 md:pl-6 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400 password-input" id="user-password" value="1234">
+            </div>
+
+            <div class="w-full relative">
+                <i class="fa-solid fa-lock absolute left-1 md:bottom-[9px] bottom-[10px] text-gray-300 md:text-xs text-md cursor-pointer show-password"></i>
+                <input type="password" placeholder="Repita sua senha" class="py-[3px] pl-8 md:pl-6 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400 password-input" id="user-confirm-password" value="1234">
+            </div>
+
+            <input type="text" placeholder="Whatsapp" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-whatsapp" value="47996439372">
+
+            <input type="date" placeholder="Data de nascimento" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-aniversario" value="2000-05-03">
+
+        </div>
+        <div class="md:w-full h-full md:h-96">
+            <div class="md:mt-6 flex flex-col gap-8 px-6">
+
+                <input type="text" placeholder="CEP" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-cep" value="88110030">
+
+                <input type="text" placeholder="Cidade" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-cidade" value="São José">
+
+                <input type="text" placeholder="Bairro" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-bairro" value="Barreiros">
+
+                <input type="number" placeholder="Número" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-numero" value="52">
+
+                <input type="text" placeholder="Referência" class="py-[3px] pl-2 md:pl-2 border-b-[1px] border-b-[#F3DFA0] text-gray-300 text-md md:text-sm w-full outline-none placeholder-gray-400" id="user-referencia" value="apto 103">
+
+                <div class="mt-4 md:mt-0 w-full text-center uppercase text-sm py-2 rounded-md bg-[#F3DFA0] text-[#20170E] font-bold hover:opacity-75 cursor-pointer" id="cadastrar-usuario">Cadastrar-se</div>
+
+            </div>
+        </div>
+    </form>
 
     <script src="../src/dist/script.js"></script>
 </body>
+
 </html>

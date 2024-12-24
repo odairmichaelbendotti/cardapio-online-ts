@@ -4,4 +4,5 @@ import { User } from "../controllers/user.controller"
 export const routes = Router()
 const usuario = new User()
 
-routes.get('/', usuario.login)
+routes.post('/pages/login', usuario.login)
+routes.post('/pages/cadastro', usuario.cadastrar)
