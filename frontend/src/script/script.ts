@@ -23,6 +23,7 @@ interface CreateUserProps {
     bairro: string
     numero: string
     referencia: string
+    role: boolean
 }
 
 // Renderiza o menu em todas as páginas quando o DOM é carregado
@@ -230,7 +231,8 @@ async function cadastrarUsuario() {
             cidade: userCidade.value,
             bairro: userBairro.value,
             numero: userNumero.value,
-            referencia: userReferencia.value
+            referencia: userReferencia.value,
+            role: false
         }
 
         const userSignIn = await cadastrarUsuarioAoBD(userData)

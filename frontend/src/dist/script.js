@@ -192,7 +192,8 @@ function cadastrarUsuario() {
                 cidade: userCidade.value,
                 bairro: userBairro.value,
                 numero: userNumero.value,
-                referencia: userReferencia.value
+                referencia: userReferencia.value,
+                role: false
             };
             const userSignIn = yield cadastrarUsuarioAoBD(userData);
         }));
