@@ -13,32 +13,47 @@ interface UserAddress {
 }
 
 interface CreateUserProps {
-    name: string
+    nomeCompleto: string
     email: string
-    password: string
+    senha: string
     whatsApp: string
-    aniversario: string
+    nascimento: string
     cep: string
     cidade: string
     bairro: string
     numero: string
     referencia: string
+}
+
+interface IsAuthUser {
+    auth: boolean
     role: boolean
 }
 
 // Renderiza o menu em todas as páginas quando o DOM é carregado
-document.addEventListener('DOMContentLoaded', () => {
-    loadMenu()
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    const token = localStorage.getItem('userToken')
+
+    if (!token) return
+
+    if (JSON.parse(token) !== '123') {
+        const userData = await isAuth()
+        loadMenu(userData)
+    }
+    
     hoverMenu()
 
     const verifyMenuHamburger = document.querySelector('.menu-hamburger')
     verifyMenuHamburger ? menuHamburger() : alert('Não carregou')
+
     showPassword()
     cadastrarUsuario()
+
 })
 
 // Cria um menu estático no HTML que serve para renderizar em todas as páginas
-function loadMenu() {
+async function loadMenu(authUser: IsAuthUser) {
     const header = document.getElementsByTagName('header')[0]
     if (!header) return
 
@@ -52,12 +67,12 @@ function loadMenu() {
 
     // Nav que receberá o conteúdo
     const nav = document.createElement('nav')
-    nav.className = 'hidden fixed top-10 left-28 md:static my-4 flex-col px-4 md:flex md:flex-row md:justify-between nav-menu'
+    nav.className = 'hidden fixed top-10 left-28 md:static my-4 flex-col px-4 md:flex md:flex-row md:justify-between nav-menu bg-[#20170E] py-4 rounded-2xl'
 
-    const storedUser = localStorage.getItem('userInfos')
+    const storedUser = authUser
 
-    if (storedUser) {
-        const userLogged = JSON.parse(storedUser)
+    if (storedUser.auth) {
+        const userLogged = storedUser
         nav.innerHTML = `
         <div class="px-6 text-center py-[2px] uppercase font-bold md:px-6 index border-[2px] border-[#20170E]"><a href="/index.html">Burger Land</a></div>
         <div class="mt-4 flex flex-col items-center gap-6 md:flex-row md:mt-0 menu-items">
@@ -89,28 +104,18 @@ function loadMenu() {
 
     if (sair) {
         sair.addEventListener('click', () => {
-            localStorage.removeItem('userInfos')
-            window.location.href = '/pages/login.html'
-        })
-    } else {
-
+            // Limpa o token primeiro
+            localStorage.setItem('userToken', '123');
+    
+            // Redireciona o usuário
+            window.location.href = '/pages/login.html';
+        });
     }
-
-
 
     hamburgerBtn.appendChild(iconHamburger)
     header.appendChild(hamburgerBtn)
     header.appendChild(nav)
 }
-
-// function removerElements() {
-//     if (!localStorage.getItem('userInfos')) {
-//         document.querySelector('.cardapio')?.remove()
-//         document.querySelector('.produtos')?.remove()
-//     } else {
-//         document.querySelector('.acessar')?.remove()
-//     }
-// }
 
 // Cria o menu hamburger e adiciona o evento de click para ocultar o nav inteiro quando clicado.
 function menuHamburger() {
@@ -172,8 +177,6 @@ function hoverMenu() {
 
 
     }
-
-    console.log(link)
 }
 
 // Mostra a senha (clicar no cadeado do menu que faz login e de criar usuário)
@@ -222,20 +225,20 @@ async function cadastrarUsuario() {
         if (!userNome || !userEmail || !userPassword || !userConfirmPassword || !userWhatsApp || !userAniversario || !userNumero || !userReferencia) return
 
         const userData: CreateUserProps = {
-            name: userNome.value,
+            nomeCompleto: userNome.value,
             email: userEmail.value,
-            password: userPassword.value,
+            senha: userPassword.value,
             whatsApp: userWhatsApp.value,
-            aniversario: userAniversario.value,
+            nascimento: userAniversario.value,
             cep: userCep.value,
             cidade: userCidade.value,
             bairro: userBairro.value,
             numero: userNumero.value,
             referencia: userReferencia.value,
-            role: false
         }
 
         const userSignIn = await cadastrarUsuarioAoBD(userData)
+        if (!userSignIn.message) localStorage.setItem('userToken', JSON.stringify(userSignIn))
     })
 
     userCep.addEventListener('blur', async () => {
@@ -300,32 +303,60 @@ if (loginBtn) {
     loginBtn.addEventListener('click', async () => {
         if (!userEmail || !userPassword) return
 
-        const userData = await loginGetUserInfos(userEmail.value, userPassword.value)
-
-        if (!userData) return
-
-        if (userData.message) {
+        const userToken = await loginGetUserInfos(userEmail.value, userPassword.value)
+       
+        if(userToken.message) {
             userNotFound?.classList.remove('hidden')
-            return
-        }
+        } else {
+            window.location.href = '/pages/cardapio.html'
+            if (!userNotFound) return
 
-        localStorage.setItem('userInfos', JSON.stringify(userData))
-        window.location.href = '/pages/cardapio.html'
+            if (!userNotFound.classList.contains('hidden')) userNotFound?.classList.add('hidden')
+
+            localStorage.setItem('userToken', JSON.stringify(userToken))
+        }
     })
 }
 
 async function loginGetUserInfos(email: string, password: string) {
-    const response = await fetch('http://localhost:3000/pages/login', {
+    try {
+        const response = await fetch('http://localhost:3000/pages/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        })
+    
+        if (!response) return
+    
+    
+        const data = await response.json()
+    
+        // Retorna o token do usuário que fez login.
+        return data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+async function isAuth () {
+    const token = localStorage.getItem('userToken')
+
+    if (!token) return
+
+    const response = await fetch('http://localhost:3000/validate-token', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
+            'authorization': `Bearer ${JSON.parse(token)}` 
+        }
     })
 
-    if (!response) return
+    if (!response.ok) return
 
     const data = await response.json()
 
+    // Retorna um objeto com "auth" e "role" sendo true ou falso.
+    console.log(data)
     return data
 }

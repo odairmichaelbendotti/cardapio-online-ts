@@ -18,7 +18,7 @@ model Usuario {
   nomeCompleto String
   email        String
   senha        String
-  WhatsApp     String
+  whatsApp     String
   nascimento   DateTime
   cep          String
   cidade       String
@@ -26,8 +26,10 @@ model Usuario {
   numero       String
   referencia   String
   pedidos      Pedido[]
-  createdAt    DateTime @default(now())
   role         Boolean  @default(false)
+  authToken   String?
+  authTokenExpiry DateTime?
+  createdAt    DateTime @default(now())
 }
 
 model Produto {
@@ -36,7 +38,7 @@ model Produto {
   descricao String
   imagem    String
   preco     Float
-  estoque   Int
+  estoque   Int?
   pedidos   PedidoProduto[]
   createdAt DateTime        @default(now())
 }

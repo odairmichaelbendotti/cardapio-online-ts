@@ -9,32 +9,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 // Renderiza o menu em todas as páginas quando o DOM é carregado
-document.addEventListener('DOMContentLoaded', () => {
-    loadMenu();
+document.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void 0, function* () {
+    const token = localStorage.getItem('userToken');
+    if (!token)
+        return;
+    if (JSON.parse(token) !== '123') {
+        const userData = yield isAuth();
+        loadMenu(userData);
+    }
     hoverMenu();
     const verifyMenuHamburger = document.querySelector('.menu-hamburger');
     verifyMenuHamburger ? menuHamburger() : alert('Não carregou');
     showPassword();
     cadastrarUsuario();
-});
+}));
 // Cria um menu estático no HTML que serve para renderizar em todas as páginas
-function loadMenu() {
-    const header = document.getElementsByTagName('header')[0];
-    if (!header)
-        return;
-    // Botão hamburger
-    const hamburgerBtn = document.createElement('div');
-    hamburgerBtn.className = 'text-2xl px-6 py-4 md:hidden menu-hamburger text-white';
-    //font awesome ícone de hamburger
-    const iconHamburger = document.createElement('i');
-    iconHamburger.className = 'fa-solid fa-bars text-white';
-    // Nav que receberá o conteúdo
-    const nav = document.createElement('nav');
-    nav.className = 'hidden fixed top-10 left-28 md:static my-4 flex-col px-4 md:flex md:flex-row md:justify-between nav-menu';
-    const storedUser = localStorage.getItem('userInfos');
-    if (storedUser) {
-        const userLogged = JSON.parse(storedUser);
-        nav.innerHTML = `
+function loadMenu(authUser) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const header = document.getElementsByTagName('header')[0];
+        if (!header)
+            return;
+        // Botão hamburger
+        const hamburgerBtn = document.createElement('div');
+        hamburgerBtn.className = 'text-2xl px-6 py-4 md:hidden menu-hamburger text-white';
+        //font awesome ícone de hamburger
+        const iconHamburger = document.createElement('i');
+        iconHamburger.className = 'fa-solid fa-bars text-white';
+        // Nav que receberá o conteúdo
+        const nav = document.createElement('nav');
+        nav.className = 'hidden fixed top-10 left-28 md:static my-4 flex-col px-4 md:flex md:flex-row md:justify-between nav-menu bg-[#20170E] py-4 rounded-2xl';
+        const storedUser = authUser;
+        if (storedUser.auth) {
+            const userLogged = storedUser;
+            nav.innerHTML = `
         <div class="px-6 text-center py-[2px] uppercase font-bold md:px-6 index border-[2px] border-[#20170E]"><a href="/index.html">Burger Land</a></div>
         <div class="mt-4 flex flex-col items-center gap-6 md:flex-row md:mt-0 menu-items">
             ${userLogged.role ? `<a href="/pages/dashboard.html"><ul class="py-[2px] px-4 cursor-pointer hover:opacity-70 border-b-[#20170E] border-b-[2px] dashboard">Dashboard</ul></a>
@@ -53,35 +60,28 @@ function loadMenu() {
         <a><ul class="flex gap-2  items-center py-[2px] px-4 cursor-pointer hover:opacity-70 cardapio border-b-[#20170E] border-b-[2px] deslogar"><i class="fa-solid fa-right-from-bracket"></i><p>Sair</p></ul></a>             
         </div>
 `;
-    }
-    else {
-        nav.innerHTML = `
+        }
+        else {
+            nav.innerHTML = `
         <div class="px-6 text-center py-[2px] uppercase font-bold md:px-6 border-[2px] border-[#20170E] index"><a href="/index.html">Burger Land</a></div>
         <div class="mt-4 flex flex-col items-center gap-6 md:flex-row md:mt-0 menu-items">
         <a href="/pages/login.html"><ul class="py-[2px] px-4 cursor-pointer hover:opacity-70 border-[#20170E] border-[2px] acessar">Acessar</ul></a>          
         </div>`;
-    }
-    const sair = nav.querySelector('.deslogar');
-    if (sair) {
-        sair.addEventListener('click', () => {
-            localStorage.removeItem('userInfos');
-            window.location.href = '/pages/login.html';
-        });
-    }
-    else {
-    }
-    hamburgerBtn.appendChild(iconHamburger);
-    header.appendChild(hamburgerBtn);
-    header.appendChild(nav);
+        }
+        const sair = nav.querySelector('.deslogar');
+        if (sair) {
+            sair.addEventListener('click', () => {
+                // Limpa o token primeiro
+                localStorage.setItem('userToken', '123');
+                // Redireciona o usuário
+                window.location.href = '/pages/login.html';
+            });
+        }
+        hamburgerBtn.appendChild(iconHamburger);
+        header.appendChild(hamburgerBtn);
+        header.appendChild(nav);
+    });
 }
-// function removerElements() {
-//     if (!localStorage.getItem('userInfos')) {
-//         document.querySelector('.cardapio')?.remove()
-//         document.querySelector('.produtos')?.remove()
-//     } else {
-//         document.querySelector('.acessar')?.remove()
-//     }
-// }
 // Cria o menu hamburger e adiciona o evento de click para ocultar o nav inteiro quando clicado.
 function menuHamburger() {
     const iconHamburger = document.querySelector('.menu-hamburger i');
@@ -136,7 +136,6 @@ function hoverMenu() {
             (_m = document.querySelector('.index')) === null || _m === void 0 ? void 0 : _m.classList.add('active-menu-home');
             break;
     }
-    console.log(link);
 }
 // Mostra a senha (clicar no cadeado do menu que faz login e de criar usuário)
 function showPassword() {
@@ -183,19 +182,20 @@ function cadastrarUsuario() {
             if (!userNome || !userEmail || !userPassword || !userConfirmPassword || !userWhatsApp || !userAniversario || !userNumero || !userReferencia)
                 return;
             const userData = {
-                name: userNome.value,
+                nomeCompleto: userNome.value,
                 email: userEmail.value,
-                password: userPassword.value,
+                senha: userPassword.value,
                 whatsApp: userWhatsApp.value,
-                aniversario: userAniversario.value,
+                nascimento: userAniversario.value,
                 cep: userCep.value,
                 cidade: userCidade.value,
                 bairro: userBairro.value,
                 numero: userNumero.value,
                 referencia: userReferencia.value,
-                role: false
             };
             const userSignIn = yield cadastrarUsuarioAoBD(userData);
+            if (!userSignIn.message)
+                localStorage.setItem('userToken', JSON.stringify(userSignIn));
         }));
         userCep.addEventListener('blur', () => __awaiter(this, void 0, void 0, function* () {
             const data = yield pegarEnderecoViaCep(`${userCep.value}`);
@@ -256,29 +256,57 @@ if (loginBtn) {
     loginBtn.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
         if (!userEmail || !userPassword)
             return;
-        const userData = yield loginGetUserInfos(userEmail.value, userPassword.value);
-        if (!userData)
-            return;
-        if (userData.message) {
+        const userToken = yield loginGetUserInfos(userEmail.value, userPassword.value);
+        if (userToken.message) {
             userNotFound === null || userNotFound === void 0 ? void 0 : userNotFound.classList.remove('hidden');
-            return;
         }
-        localStorage.setItem('userInfos', JSON.stringify(userData));
-        window.location.href = '/pages/cardapio.html';
+        else {
+            window.location.href = '/pages/cardapio.html';
+            if (!userNotFound)
+                return;
+            if (!userNotFound.classList.contains('hidden'))
+                userNotFound === null || userNotFound === void 0 ? void 0 : userNotFound.classList.add('hidden');
+            localStorage.setItem('userToken', JSON.stringify(userToken));
+        }
     }));
 }
 function loginGetUserInfos(email, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch('http://localhost:3000/pages/login', {
+        try {
+            const response = yield fetch('http://localhost:3000/pages/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            if (!response)
+                return;
+            const data = yield response.json();
+            // Retorna o token do usuário que fez login.
+            return data;
+        }
+        catch (error) {
+            console.error(error);
+        }
+    });
+}
+function isAuth() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const token = localStorage.getItem('userToken');
+        if (!token)
+            return;
+        const response = yield fetch('http://localhost:3000/validate-token', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
+                'authorization': `Bearer ${JSON.parse(token)}`
+            }
         });
-        if (!response)
+        if (!response.ok)
             return;
         const data = yield response.json();
+        // Retorna um objeto com "auth" e "role" sendo true ou falso.
+        console.log(data);
         return data;
     });
 }
