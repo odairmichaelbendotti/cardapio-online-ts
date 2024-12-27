@@ -19,4 +19,5 @@ routes.post('/pages/cadastro', usuario.cadastrar)
 routes.post('/validate-token', usuarioMiddleware.verifyToken, usuario.validateToken)
 
 // ---Rotas de produto----
-routes.get('/pages/cardapio', usuarioMiddleware.verifyToken, produtos.getProducts)
+routes.get('/pages/cardapio', usuarioMiddleware.verifyToken, produtos.getAllProducts)
+routes.get('/pages/cardapio/:id', produtos.getProductsById)

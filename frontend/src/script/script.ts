@@ -30,9 +30,19 @@ interface IsAuthUser {
     role: boolean
 }
 
+interface ProductProps {
+    id: string
+    nome: string
+    descricao: string
+    imagem: string
+    preco: string
+    estoque: number
+    createdAt: Date
+}
+
 // Renderiza o menu em todas as páginas quando o DOM é carregado
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
     const token = localStorage.getItem('userToken')
 
     if (!token) return
@@ -41,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const userData = await isAuth()
         loadMenu(userData)
     }
-    
+
     hoverMenu()
 
     const verifyMenuHamburger = document.querySelector('.menu-hamburger')
@@ -106,7 +116,7 @@ async function loadMenu(authUser: IsAuthUser) {
         sair.addEventListener('click', () => {
             // Limpa o token primeiro
             localStorage.setItem('userToken', '123');
-    
+
             // Redireciona o usuário
             window.location.href = '/pages/login.html';
         });
@@ -304,8 +314,8 @@ if (loginBtn) {
         if (!userEmail || !userPassword) return
 
         const userToken = await loginGetUserInfos(userEmail.value, userPassword.value)
-       
-        if(userToken.message) {
+
+        if (userToken.message) {
             userNotFound?.classList.remove('hidden')
         } else {
             window.location.href = '/pages/cardapio.html'
@@ -327,12 +337,12 @@ async function loginGetUserInfos(email: string, password: string) {
             },
             body: JSON.stringify({ email, password })
         })
-    
+
         if (!response) return
-    
-    
+
+
         const data = await response.json()
-    
+
         // Retorna o token do usuário que fez login.
         return data
     } catch (error) {
@@ -340,7 +350,7 @@ async function loginGetUserInfos(email: string, password: string) {
     }
 }
 
-async function isAuth () {
+async function isAuth() {
     const token = localStorage.getItem('userToken')
 
     if (!token) return
@@ -348,7 +358,7 @@ async function isAuth () {
     const response = await fetch('http://localhost:3000/validate-token', {
         method: 'POST',
         headers: {
-            'authorization': `Bearer ${JSON.parse(token)}` 
+            'authorization': `Bearer ${JSON.parse(token)}`
         }
     })
 
@@ -359,4 +369,71 @@ async function isAuth () {
     // Retorna um objeto com "auth" e "role" sendo true ou falso.
     console.log(data)
     return data
+}
+
+async function getAllProducts() {
+    const response = await fetch('http://localhost:3000/pages/cardapio')
+
+    if (!response) return
+
+    const data = await response.json()
+    return data
+}
+
+async function renderCardapio() {
+    const data: ProductProps[] = await getAllProducts()
+    if(!data) return
+
+    const containerCardapio = document.getElementById('product-area')
+    if (!containerCardapio) return
+
+    data.forEach(item => {
+        const div = document.createElement('div')
+        div.className = 'flex gap-4 bg-[#30271d] w-full p-4 rounded-xl shadow-sm shadow-[#30271d] hover:opacity-90 cardapio-items hover:cursor-pointer'
+        div.innerHTML = `
+                <img src='../${item.imagem}'
+                    class="w-24 md:w-36 rounded-xl">
+                <div class="flex flex-col justify-between w-full ">
+                    <div class="w-full">
+                        <p class="text-md uppercase font-bold w-full tracking-wide md:text-md">${item.nome}</p>
+                        <p class="text-xs text-justify md:text-sm text-[#f9f1d7]">${item.descricao}</p>
+                    </div>
+                    <div class="flex justify-between w-full">
+                        <p class="font-bold text-md md:text-xl">R$${Number(item.preco).toFixed(2)}</p>
+                        <div class="flex items-center gap-4">
+                            <div class="text-md cursor-pointer md:text-xl"><i class="fa-regular fa-heart hover:text-red-300"></i></div>
+                            <div class="text-md cursor-pointer md:text-sm cart-products"><i class="fa-solid fa-cart-shopping"></i></div>
+                        </div>
+                    </div>
+                </div>
+        `
+        div.addEventListener('click', async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/pages/cardapio/${item.id}`)
+                if (!response.ok) return
+    
+                const data = await response.json()
+                console.log(data)
+                window.location.href = `/pages/cardapio/produto.html?id=${item.id}`
+            } catch (error) {
+                console.error(error)
+            }
+        })
+
+        const cartProducts = div.querySelectorAll('.cart-products')
+        cartProducts.forEach(element => {
+            element.addEventListener('click', () => {
+                alert(item.id)
+                event?.stopPropagation()
+            })
+        })
+        
+        containerCardapio.appendChild(div)
+    })        
+}
+
+const currentPath = window.location.pathname;
+
+if (currentPath === '/pages/cardapio.html') {
+    renderCardapio()
 }

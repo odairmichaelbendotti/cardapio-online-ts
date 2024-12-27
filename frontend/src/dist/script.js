@@ -310,3 +310,68 @@ function isAuth() {
         return data;
     });
 }
+function getAllProducts() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield fetch('http://localhost:3000/pages/cardapio');
+        if (!response)
+            return;
+        const data = yield response.json();
+        return data;
+    });
+}
+function renderCardapio() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const data = yield getAllProducts();
+        if (!data)
+            return;
+        const containerCardapio = document.getElementById('product-area');
+        if (!containerCardapio)
+            return;
+        data.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'flex gap-4 bg-[#30271d] w-full p-4 rounded-xl shadow-sm shadow-[#30271d] hover:opacity-90 cardapio-items hover:cursor-pointer';
+            div.innerHTML = `
+                <img src='../${item.imagem}'
+                    class="w-24 md:w-36 rounded-xl">
+                <div class="flex flex-col justify-between w-full ">
+                    <div class="w-full">
+                        <p class="text-md uppercase font-bold w-full tracking-wide md:text-md">${item.nome}</p>
+                        <p class="text-xs text-justify md:text-sm text-[#f9f1d7]">${item.descricao}</p>
+                    </div>
+                    <div class="flex justify-between w-full">
+                        <p class="font-bold text-md md:text-xl">R$${Number(item.preco).toFixed(2)}</p>
+                        <div class="flex items-center gap-4">
+                            <div class="text-md cursor-pointer md:text-xl"><i class="fa-regular fa-heart hover:text-red-300"></i></div>
+                            <div class="text-md cursor-pointer md:text-sm cart-products"><i class="fa-solid fa-cart-shopping"></i></div>
+                        </div>
+                    </div>
+                </div>
+        `;
+            div.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const response = yield fetch(`http://localhost:3000/pages/cardapio/${item.id}`);
+                    if (!response.ok)
+                        return;
+                    const data = yield response.json();
+                    console.log(data);
+                    window.location.href = `/pages/cardapio/produto.html?id=${item.id}`;
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }));
+            const cartProducts = div.querySelectorAll('.cart-products');
+            cartProducts.forEach(element => {
+                element.addEventListener('click', () => {
+                    alert(item.id);
+                    event === null || event === void 0 ? void 0 : event.stopPropagation();
+                });
+            });
+            containerCardapio.appendChild(div);
+        });
+    });
+}
+const currentPath = window.location.pathname;
+if (currentPath === '/pages/cardapio.html') {
+    renderCardapio();
+}
