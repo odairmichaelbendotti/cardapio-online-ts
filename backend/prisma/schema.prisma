@@ -14,27 +14,28 @@ datasource db {
 }
 
 model Usuario {
-  id           String   @id @default(uuid())
-  nomeCompleto String
-  email        String
-  senha        String
-  whatsApp     String
-  nascimento   DateTime
-  cep          String
-  cidade       String
-  bairro       String
-  numero       String
-  referencia   String
-  pedidos      Pedido[]
-  role         Boolean  @default(false)
-  authToken   String?
+  id              String    @id @default(uuid())
+  nomeCompleto    String
+  email           String
+  senha           String
+  whatsApp        String
+  nascimento      DateTime
+  cep             String
+  cidade          String
+  bairro          String
+  numero          String
+  referencia      String
+  pedidos         Pedido[]
+  role            Boolean   @default(false)
+  authToken       String?
   authTokenExpiry DateTime?
-  createdAt    DateTime @default(now())
+  createdAt       DateTime  @default(now())
 }
 
 model Produto {
   id        String          @id @default(uuid())
   nome      String
+  tipo      String @default("Hamburger")
   descricao String
   imagem    String
   preco     Float

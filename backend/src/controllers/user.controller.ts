@@ -117,4 +117,104 @@ export class User {
         }
 
     }
+    async getAllUsers(req: Request, res: Response) {
+        const data = await prisma.usuario.findMany()
+
+        if (!data) {
+            res.json({ "message": "Erro ao buscar usuários." })
+            return
+        }
+
+        res.json(data)
+    }
+    async deleteUser(req: Request, res: Response) {
+        const { id } = req.params
+
+        const deleteUser = await prisma.usuario.delete({
+            where: {
+                id: id
+            }
+        })
+
+        res.json({ "Usuário deletado": deleteUser })
+    }
+    async getSpecificUser(req: Request, res: Response) {
+        const id = req.params.id
+
+        if(!id) {
+            res.json({"message": "ID não fornecido"})
+            return
+        }
+
+        try {
+            const user = await prisma.usuario.findFirst({
+                where: {
+                    id: id
+                }
+            })
+
+            res.json(user)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async editUser(req: Request, res: Response) {
+        const data = req.body
+
+        switch (data.action) {
+            case 'updateUser':
+                try {
+                    const response = await prisma.usuario.update({
+                        where:{
+                            id: data.infos.id
+                        },
+                        data: {
+                            nomeCompleto: data.infos.nomeCompleto,
+                            email: data.infos.email,
+                            senha: data.infos.senha,
+                            whatsApp: data.infos.whatsApp,
+                            cep: data.infos.cep,
+                            cidade: data.infos.cidade,
+                            bairro: data.infos.bairro,
+                            numero: data.infos.numero,
+                            referencia: data.infos.referencia,
+                            role: data.infos.role
+                        }
+                    })
+            
+                    if (!response) {
+                        res.json({"message": "Faltaram informações do usuário"})
+                        return
+                    }
+                    res.json({"message": "Informações do usuário alteradas com sucesso."})
+                } catch (error) {
+                    console.log(error)
+                }
+            break
+            case 'updateProduct':
+                try {
+                    const response = await prisma.produto.update({
+                        where: { id: data.newInfos.id},
+                        data: {
+                            nome: data.newInfos.nome,
+                            tipo: data.newInfos.tipo,
+                            descricao: data.newInfos.descricao,
+                            preco: parseFloat(data.newInfos.preco),
+                            estoque: parseInt(data.newInfos.estoque)
+                        }
+                    })
+
+                    if (!response) {
+                        res.json({"message": "Faltaram informações do produto"})
+                        return
+                    }
+
+                    res.json({"message": "Informações do produto alteradas com sucesso."})
+                } catch(error) {
+                    console.log(error)
+                }
+        }
+
+    }
 }

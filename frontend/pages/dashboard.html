@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,118 @@
     <link rel="stylesheet" href="../src/styles/style.css">
     <link rel="stylesheet" href="../src/styles/input.css">
     <link rel="stylesheet" href="../src/styles/output.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
     <header class="md:max-w-6xl md:mx-auto md:w-full"></header>
 
+    <!-- Popup Editar Usuário aqui -->
+    <div id="popup-edit-user"
+        class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 trans w-[90%] md:max-w-[1100px] p-10 bg-[#F3DFA0] shadow-sm shadow-gray-400">
+        <div class="fixed top-1 right-1 p-2 bg-[#20170E] cursor-pointer" id="close-popup-edit-user">X</div>
+
+        <div class="flex flex-col md:flex-row gap-4 md:gap-0 justify-around">
+            <div class="flex flex-col gap-4 md:gap-6 md:w-1/5">
+                <input type="text" placeholder="Nome"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-name">
+                <input type="email" placeholder="E-mail"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-email">
+                <input type="password" placeholder="Senha"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-senha">
+            </div>
+            <div class="flex flex-col gap-4 md:gap-6 md:w-1/5">
+                <input type="text" placeholder="WhatsApp"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-whatsapp">
+                <input type="text" placeholder="CEP"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-cep">
+                <input type="text" placeholder="Cidade"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-cidade">
+            </div>
+            <div class="flex flex-col gap-4 md:gap-6 md:w-1/5">
+                <input type="text" placeholder="Bairro"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-bairro">
+                <input type="text" placeholder="Número"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-numero">
+                <input type="text" placeholder="Referência"
+                    class="bg-[#F3DFA0] border-b-[2px] border-[#20170E] text-xs py-[2px] text-[#20170E] pl-[2px] placeholder-[#20170E] outline-none edit-user-referencia">
+            </div>
+        </div>
+        <div class="mt-4 md:ml-16 flex items-center gap-2">
+            <input type="checkbox" id="is-admin-user">
+            <label for="is-admin-user" class="text-[#20170E] text-xs">Administrador</label>
+        </div>
+
+        <div class="w-full bg-[#20170E] rounded-md mt-6 py-2 text-center cursor-pointer" id="change-user-infos">Salvar
+        </div>
+
+    </div>
+
+    <!-- Popup Editar Produto aqui -->
+    <div class="fixed w-full h-screen top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:p-10 shadow-sm shadow-gray-400 px-4" id="edit-product-area" style="display: none; background-color: #20170eab;">
+
+    </div>
+
+    <div class="max-w-7xl mx-auto mt-10">
+        <p class="text-center text-2xl uppercase font-bold">Dashboard admin</p>
+    </div>
+
+    <main class="max-w-7xl mx-auto mt-10 md:flex p-4 gap-4">
+        <div class="flex md:flex-col gap-4 md:w-1/5">
+            <div class="flex gap-6 items-center">
+                <i class="fa-regular fa-user text-sm"></i>
+                <p class="uppercase font-bold">Odair</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="bg-[#F3DFA0]">&nbsp;</div>
+                <p class="active-dashboard px-4 py-2 rounded-md text-sm md:text-center cursor-pointer font-bold"
+                    id="user-dashboard">Usuários</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="bg-[#F3DFA0]">&nbsp;</div>
+                <p class="px-4 py-2 rounded-md text-sm md:text-center cursor-pointer font-bold" id="user-produtos">Produtos</p>
+            </div>
+        </div>
+
+        <!-- Dashboard USUÁRIO aqui -->
+        <div class="md:w-4/5 mt-10 md:mt-0" id="table-user-area">
+            <table class="w-full">
+                <thead class="bg-[#F3DFA0] text-[#20170E] font-bold">
+                    <tr>
+                        <th class="py-2">E-mail</th>
+                        <th class="hidden md:table-cell">WhatsApp</th>
+                        <th class="hidden md:table-cell">CEP</th>
+                        <th class="hidden md:table-cell">Cidade</th>
+                        <th class="hidden md:table-cell">Bairro</th>
+                        <th class="hidden md:table-cell">Número</th>
+                        <th class="hidden md:table-cell">Referência</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="table-user-infos"></tbody>
+            </table>
+        </div>
+
+        <!-- Dashboard PRODUTO aqui -->
+        <div class="md:w-4/5 mt-10 md:mt-0" style="display: none" id="products-area-dashboard">
+            <div class="grid md:grid-cols-2 gap-2 md:gap-4" id="grid-products">
+                <!-- <div class="flex justify-between items-center w-full px-4 py-[10px] bg-[#2b251f] rounded-md hover:opacity-80">
+                    <img src="../src/assets/img/cardapio/burguers/shake-shack-shackburger-16-pack.316f8b09144db65931ea29e34869287a.jpg" alt="" class="rounded-md w-16">
+                    <p>Cássico do Cheff</p>
+                    <p class="hidden md:block">Burger</p>
+                    <p  class="hidden md:block">R$57.90</p>
+                    <div class="flex items-center justify-center gap-2">
+                        <div class="cursor-pointer"><i class="fa-regular fa-pen-to-square"></i></div>
+                        <div class="cursor-pointer"><i class="fa-solid fa-trash-can"></i></div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </main>
+
     <script src="../src/dist/script.js"></script>
 </body>
+
 </html>

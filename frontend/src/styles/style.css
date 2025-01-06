@@ -28,3 +28,9 @@ body {
     border: 2px solid var(--secondary);
     border-radius: 30px;
 }
+
+.active-dashboard {
+    font-weight: bold;  
+    background-color: var(--secondary);
+    color: var(--primary);
+}
